@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-class JwtService {
+public class JwtService {
     private static final int EXP_TIME_SEC = 30 * 24 * 60 * 60;
     private final JWSAlgorithm jwsAlgorithm = JWSAlgorithm.HS256;
     private final JWSSigner signer;
@@ -33,7 +33,7 @@ class JwtService {
         }
     }
 
-    String createSignedJWT(String username, List<String> authorities) {
+    public String createSignedJWT(String username, List<String> authorities) {
         JWSHeader header = new JWSHeader(jwsAlgorithm);
         LocalDateTime nowPlus1Hour = LocalDateTime.now().plusSeconds(EXP_TIME_SEC);
         Date expirationDate = Date.from(nowPlus1Hour.atZone(ZoneId.systemDefault()).toInstant());

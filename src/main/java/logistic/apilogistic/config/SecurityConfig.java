@@ -33,8 +33,8 @@ class SecurityConfig {
         JwtAuthenticationFilter jwtAuthenticationFilter = new JwtAuthenticationFilter(authenticationManager, jwtService);
         BearerTokenFilter bearerTokenFilter = new BearerTokenFilter(jwtService);
         http.authorizeHttpRequests(requests -> requests
-                .requestMatchers(mvc.pattern(HttpMethod.POST, "/api/products")).hasRole("ADMIN")
-                .requestMatchers(mvc.pattern("/api/products")).hasAnyRole("USER", "ADMIN")
+                .requestMatchers(mvc.pattern("/auth")).permitAll()
+                .requestMatchers(mvc.pattern("/register")).permitAll()
                 .anyRequest().permitAll()
         );
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
