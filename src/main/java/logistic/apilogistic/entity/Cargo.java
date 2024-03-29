@@ -2,7 +2,9 @@ package logistic.apilogistic.entity;
 
 import jakarta.persistence.*;
 
+
 @Entity
+@Table(name = "cargo")
 public class Cargo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -10,6 +12,8 @@ public class Cargo {
     private Double price;
     private String typeCargo;
     private String status;
+
+    private String owner;
 
     @ManyToOne
     @JoinColumn(name = "load_address_id", nullable = false)
