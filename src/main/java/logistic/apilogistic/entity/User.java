@@ -1,20 +1,28 @@
-package logistic.apilogistic.user;
+package logistic.apilogistic.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name = "application_user")
-class User {
+public class User {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@NotNull
 	private String firstName;
+	@NotNull
 	private String lastName;
+	@Email(message = "Invalid e-mail")
 	private String email;
+	@Size(min = 8)
+	@NotNull
 	private String password;
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(
@@ -23,6 +31,9 @@ class User {
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
 	)
 	private Set<UserRole> roles = new HashSet<>();
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id")
+	private Address address;
 	
 	public Long getId() {
 		return id;
