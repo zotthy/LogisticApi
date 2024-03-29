@@ -1,4 +1,4 @@
-package logistic.apilogistic.user.dto;
+package logistic.apilogistic.Dtos;
 
 import java.util.Set;
 

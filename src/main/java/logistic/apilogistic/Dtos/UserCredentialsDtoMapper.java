@@ -1,14 +1,16 @@
-package logistic.apilogistic.user;
+package logistic.apilogistic.Dtos;
 
 
 
-import logistic.apilogistic.user.dto.UserCredentialsDto;
+import logistic.apilogistic.entity.User;
+import logistic.apilogistic.entity.UserRole;
+import logistic.apilogistic.Dtos.UserCredentialsDto;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-class UserCredentialsDtoMapper {
-    static UserCredentialsDto map(User user) {
+public class UserCredentialsDtoMapper {
+    public static UserCredentialsDto map(User user) {
         String email = user.getEmail();
         String password = user.getPassword();
         Set<String> roles = user.getRoles()

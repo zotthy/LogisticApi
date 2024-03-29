@@ -1,12 +1,11 @@
 package logistic.apilogistic.authRequest;
-
 import java.util.Set;
 
 public class RegisterRequest {
     private Long id;
     private String firstName;
     private String lastName;
-    private String emial;
+    private String email;
     private String password;
     private Set<String> roles;
 
@@ -34,12 +33,12 @@ public class RegisterRequest {
         this.lastName = lastName;
     }
 
-    public String getEmial() {
-        return emial;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmial(String emial) {
-        this.emial = emial;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

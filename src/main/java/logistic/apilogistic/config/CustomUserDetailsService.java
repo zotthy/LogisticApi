@@ -1,7 +1,7 @@
 package logistic.apilogistic.config;
 
-import logistic.apilogistic.user.UserCredentialsService;
-import logistic.apilogistic.user.dto.UserCredentialsDto;
+import logistic.apilogistic.service.UserCredentialsService;
+import logistic.apilogistic.Dtos.UserCredentialsDto;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
