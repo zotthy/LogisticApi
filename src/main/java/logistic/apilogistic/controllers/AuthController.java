@@ -2,52 +2,34 @@ package logistic.apilogistic.controllers;
 
 import logistic.apilogistic.authRequest.LoginRequest;
 import logistic.apilogistic.authRequest.RegisterRequest;
-import logistic.apilogistic.config.JwtService;
+import logistic.apilogistic.entity.Address;
 import logistic.apilogistic.exceptions.ExistsException;
+import logistic.apilogistic.service.LoginService;
 import logistic.apilogistic.service.UserCredentialsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
     private final UserCredentialsService userCredentialsService;
+    private final LoginService loginService;
 
-    public AuthController(AuthenticationManager authenticationManager, JwtService jwtService, UserCredentialsService userCredentialsService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
+    @Autowired
+    public AuthController(UserCredentialsService userCredentialsService, LoginService loginService) {
         this.userCredentialsService = userCredentialsService;
+        this.loginService = loginService;
     }
 
     @PostMapping("/login")
-    ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()));
-
-        List<String> authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        String token = jwtService.createSignedJWT(authentication.getName(),authorities);
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+        String token = loginService.authenticateAndCreateToken(loginRequest);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
+
     @PostMapping("/register")
-    ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest, BindingResult bindingResult){
+    ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
             userCredentialsService.register(registerRequest);
             return new ResponseEntity<>("register is sucessfull", HttpStatus.OK);
@@ -58,8 +40,10 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/hi")
-    String hi(@RequestHeader("Authorization") String token){
-        return token;
+    @PostMapping("/address")
+    public ResponseEntity<?> createAddress(@RequestHeader("Authorization") String token,
+                                           @RequestBody Address addressDto) {
+        userCredentialsService.createAndAssignAddressToUser(token, addressDto);
+        return ResponseEntity.ok().body("Address created successfully.");
     }
 }
