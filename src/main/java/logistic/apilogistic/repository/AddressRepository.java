@@ -1,9 +1,9 @@
 package logistic.apilogistic.repository;
 
-import logistic.apilogistic.entity.CargoAddress;
+import logistic.apilogistic.entity.Address;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CargoAddressRepository extends JpaRepository<CargoAddress,Long> {
+public interface AddressRepository extends JpaRepository<Address,Long> {
 }

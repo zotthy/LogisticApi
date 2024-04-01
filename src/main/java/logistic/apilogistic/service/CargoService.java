@@ -8,6 +8,7 @@ import logistic.apilogistic.dtoMapper.CargoAddressMapper;
 import logistic.apilogistic.dtoMapper.CargoMapper;
 import logistic.apilogistic.entity.*;
 import logistic.apilogistic.repository.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -31,6 +32,7 @@ public class CargoService {
     private final CargoOwnersRepository cargoOwnersRepository;
     private final CargoHandlerRepository cargoHandlerRepository;
 
+    @Autowired
     public CargoService(CargoAddressRepository cargoAddressRepository, CargoRepository cargoRepository,
                         CargoMapper cargoMapper, CargoAddressMapper cargoAddressMapper, JwtService jwtService,
                         UserRepository userRepository, CargoOwnersRepository cargoOwnersRepository,
@@ -42,15 +44,15 @@ public class CargoService {
         this.cargoAddressMapper = cargoAddressMapper;
         this.userRepository = userRepository;
         this.cargoOwnersRepository = cargoOwnersRepository;
-        this.cargoHandlerRepository =cargoHandlerRepository;
+        this.cargoHandlerRepository = cargoHandlerRepository;
     }
 
-    public Optional<CargoDto> getCargoById(Long id){
+    public Optional<CargoDto> getCargoById(Long id) {
         Optional<Cargo> cargo = cargoRepository.findById(id);
         return cargo.map(cargoMapper::toDto);
     }
-    @Transactional
-    public Page<CargoDto> page(int page,int pageSize){
+
+    public Page<CargoDto> page(int page, int pageSize) {
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Cargo> cargoPage = cargoRepository.findAll(pageable);
         List<CargoDto> cargoDtoList = cargoPage.getContent().stream()
@@ -58,9 +60,10 @@ public class CargoService {
                 .collect(Collectors.toList());
         return new PageImpl<>(cargoDtoList, pageable, cargoPage.getTotalElements());
     }
+
     public Page<CargoDto> getCargosByUser(String token, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        String userEmail = jwtService.getEmailFromToken(token); // Assume getUserEmail() method is exist and it will extract email from JWT token
+        String userEmail = jwtService.getEmailFromToken(token);
 
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("User with e-mail " + userEmail + " was not found."));
@@ -71,7 +74,7 @@ public class CargoService {
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), cargos.size());
         List<CargoDto> cargoDtos = cargos.subList(start, end).stream()
-                .map(cargoMapper::toDto) // Assume cargoMapper exist for converting Cargo into CargoDto
+                .map(cargoMapper::toDto)
                 .collect(Collectors.toList());
 
         return new PageImpl<>(cargoDtos, pageable, cargos.size());
@@ -88,9 +91,10 @@ public class CargoService {
         cargoHandler.setUser(user);
         cargoHandler.setCargo(cargo);
 
-         cargoHandlerRepository.save(cargoHandler);
+        cargoHandlerRepository.save(cargoHandler);
     }
-    public CargoDto add(String token,CargoDto cargoDto) {
+    @Transactional
+    public CargoDto add(String token, CargoDto cargoDto) {
 
         String email = jwtService.getEmailFromToken(token);
         System.out.println(email);
@@ -113,10 +117,8 @@ public class CargoService {
         Cargo_owners owners = new Cargo_owners();
         owners.setCargo(cargo);
         owners.setUser(userRepository.findByEmail(email)
-                .orElseThrow(()-> new EntityNotFoundException("User with ID not found.")));
+                .orElseThrow(() -> new EntityNotFoundException("User with ID not found.")));
         cargoOwnersRepository.save(owners);
-
-
         return cargoDto;
     }
 

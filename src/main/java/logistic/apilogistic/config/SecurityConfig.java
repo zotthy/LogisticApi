@@ -36,6 +36,7 @@ class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(mvc.pattern("/register")).permitAll()
                 .requestMatchers(mvc.pattern("/login")).permitAll()
+                .requestMatchers(mvc.pattern("/address")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/dis")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/{id}")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/add")).hasRole("USER")
