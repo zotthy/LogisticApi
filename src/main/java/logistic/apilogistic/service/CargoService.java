@@ -6,15 +6,14 @@ import logistic.apilogistic.Dtos.CargoDto;
 import logistic.apilogistic.config.JwtService;
 import logistic.apilogistic.dtoMapper.CargoAddressMapper;
 import logistic.apilogistic.dtoMapper.CargoMapper;
-import logistic.apilogistic.entity.Cargo;
-import logistic.apilogistic.entity.CargoAddress;
-import logistic.apilogistic.entity.Cargo_owners;
+import logistic.apilogistic.entity.*;
 import logistic.apilogistic.repository.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -30,10 +29,12 @@ public class CargoService {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final CargoOwnersRepository cargoOwnersRepository;
+    private final CargoHandlerRepository cargoHandlerRepository;
 
     public CargoService(CargoAddressRepository cargoAddressRepository, CargoRepository cargoRepository,
                         CargoMapper cargoMapper, CargoAddressMapper cargoAddressMapper, JwtService jwtService,
-                        UserRepository userRepository, CargoOwnersRepository cargoOwnersRepository) {
+                        UserRepository userRepository, CargoOwnersRepository cargoOwnersRepository,
+                        CargoHandlerRepository cargoHandlerRepository) {
         this.cargoAddressRepository = cargoAddressRepository;
         this.cargoRepository = cargoRepository;
         this.cargoMapper = cargoMapper;
@@ -41,12 +42,14 @@ public class CargoService {
         this.cargoAddressMapper = cargoAddressMapper;
         this.userRepository = userRepository;
         this.cargoOwnersRepository = cargoOwnersRepository;
+        this.cargoHandlerRepository =cargoHandlerRepository;
     }
 
     public Optional<CargoDto> getCargoById(Long id){
         Optional<Cargo> cargo = cargoRepository.findById(id);
         return cargo.map(cargoMapper::toDto);
     }
+    @Transactional
     public Page<CargoDto> page(int page,int pageSize){
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Cargo> cargoPage = cargoRepository.findAll(pageable);
@@ -55,7 +58,38 @@ public class CargoService {
                 .collect(Collectors.toList());
         return new PageImpl<>(cargoDtoList, pageable, cargoPage.getTotalElements());
     }
+    public Page<CargoDto> getCargosByUser(String token, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        String userEmail = jwtService.getEmailFromToken(token); // Assume getUserEmail() method is exist and it will extract email from JWT token
 
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("User with e-mail " + userEmail + " was not found."));
+
+        List<Cargo_owners> cargoOwnersList = cargoOwnersRepository.findByUser(user);
+        List<Cargo> cargos = cargoOwnersList.stream().map(Cargo_owners::getCargo).toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), cargos.size());
+        List<CargoDto> cargoDtos = cargos.subList(start, end).stream()
+                .map(cargoMapper::toDto) // Assume cargoMapper exist for converting Cargo into CargoDto
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(cargoDtos, pageable, cargos.size());
+    }
+
+    public void assignCargoHandler(String token, Long cargoId) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
+                .orElseThrow(() -> new EntityNotFoundException("User with email was not found."));
+
+        Cargo cargo = cargoRepository.findById(cargoId)
+                .orElseThrow(() -> new EntityNotFoundException("Cargo with id was not found."));
+
+        Cargo_handler cargoHandler = new Cargo_handler();
+        cargoHandler.setUser(user);
+        cargoHandler.setCargo(cargo);
+
+         cargoHandlerRepository.save(cargoHandler);
+    }
     public CargoDto add(String token,CargoDto cargoDto) {
 
         String email = jwtService.getEmailFromToken(token);
@@ -73,14 +107,15 @@ public class CargoService {
         cargo.setLoadAddress(loadAdress);
         cargo.setUnloadAddress(unloadadress);
         cargo.setOwner(email);
+
         cargoRepository.save(cargo);
 
         Cargo_owners owners = new Cargo_owners();
         owners.setCargo(cargo);
         owners.setUser(userRepository.findByEmail(email)
                 .orElseThrow(()-> new EntityNotFoundException("User with ID not found.")));
-
         cargoOwnersRepository.save(owners);
+
 
         return cargoDto;
     }

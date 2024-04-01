@@ -36,10 +36,11 @@ class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(mvc.pattern("/register")).permitAll()
                 .requestMatchers(mvc.pattern("/login")).permitAll()
-                .requestMatchers(mvc.pattern("/hi")).hasRole("ADMIN")
                 .requestMatchers(mvc.pattern("/cargo/dis")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/cargo/{id}")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/add")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/cargo/{cargoId}/addHandler")).hasRole("USER")
                 .anyRequest().permitAll()
         );
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

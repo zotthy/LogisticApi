@@ -1,15 +1,16 @@
 package logistic.apilogistic.repository;
 
 import logistic.apilogistic.entity.Cargo;
+import logistic.apilogistic.entity.Cargo_owners;
+import logistic.apilogistic.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
+import java.util.List;
 import java.util.Optional;
 
-public interface CargoRepository extends PagingAndSortingRepository<Cargo,Long> {
+public interface CargoRepository extends JpaRepository<Cargo,Long> {
     Page<Cargo> findAll(Pageable pageable);
-    void save(Cargo cargo);
-    Optional<Cargo> findById(Long id);
-
 }
