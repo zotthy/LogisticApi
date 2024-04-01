@@ -93,12 +93,13 @@ public class JwtService {
     }
 
     public String getEmailFromToken(String token) {
+        String extractEmail = token.replace("Bearer ", "");
         try {
-            SignedJWT signedJWT = SignedJWT.parse(token);
+            SignedJWT signedJWT = SignedJWT.parse(extractEmail);
             JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
             return jwtClaimsSet.getSubject();
-        } catch (ParseException e){
-            throw new JwtAuthenticationException("Failed to get email from token");
+        } catch (ParseException e) {
+            throw new RuntimeException("Failed to get email from token");
         }
     }
 }

@@ -11,6 +11,13 @@ public class CargoAddress {
     private String city;
     private String zip_code;
 
+    public CargoAddress(Long id, String street, String city, String zipCode) {
+    }
+
+    public CargoAddress() {
+
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,5 +48,15 @@ public class CargoAddress {
 
     public void setZip_code(String zip_code) {
         this.zip_code = zip_code;
+    }
+
+    @Override
+    public String toString() {
+        return "CargoAddress{" +
+                "id=" + id +
+                ", street='" + street + '\'' +
+                ", city='" + city + '\'' +
+                ", zip_code='" + zip_code + '\'' +
+                '}';
     }
 }
