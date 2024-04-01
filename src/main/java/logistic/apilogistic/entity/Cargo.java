@@ -8,11 +8,10 @@ import jakarta.persistence.*;
 public class Cargo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private Double price;
     private String typeCargo;
     private String status;
-
     private String owner;
 
     @ManyToOne
@@ -22,6 +21,24 @@ public class Cargo {
     @ManyToOne
     @JoinColumn(name = "unload_address_id", nullable = false)
     private CargoAddress unloadAddress;
+
+    public Cargo() {
+    }
+
+    public Cargo(Long id, Double price, String typeCargo, String status, CargoAddress loadAddress, CargoAddress unloadAddress) {
+    }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public long getId() {
         return id;
@@ -69,5 +86,18 @@ public class Cargo {
 
     public void setUnloadAddress(CargoAddress unloadAddress) {
         this.unloadAddress = unloadAddress;
+    }
+
+    @Override
+    public String toString() {
+        return "Cargo{" +
+                "id=" + id +
+                ", price=" + price +
+                ", typeCargo='" + typeCargo + '\'' +
+                ", status='" + status + '\'' +
+                ", owner='" + owner + '\'' +
+                ", loadAddress=" + loadAddress +
+                ", unloadAddress=" + unloadAddress +
+                '}';
     }
 }

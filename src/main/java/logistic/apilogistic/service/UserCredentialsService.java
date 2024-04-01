@@ -11,6 +11,7 @@ import logistic.apilogistic.repository.UserRepository;
 import logistic.apilogistic.repository.UserRoleRepozitory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,7 +23,8 @@ public class UserCredentialsService {
     private final UserRoleRepozitory userRoleRepozitory;
     private final UserRegisterDtoMapper userRegisterDtoMapper;
 
-    public UserCredentialsService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleRepozitory userRoleRepozitory, UserRegisterDtoMapper userRegisterDtoMapper) {
+    public UserCredentialsService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleRepozitory userRoleRepozitory,
+                                  UserRegisterDtoMapper userRegisterDtoMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRoleRepozitory = userRoleRepozitory;
@@ -34,6 +36,7 @@ public class UserCredentialsService {
                 .map(UserCredentialsDtoMapper::map);
     }
 
+    @Transactional
     public void register(RegisterRequest registerRequest){
         if (userRepository.existsByEmail(registerRequest.getEmail())){
             throw new ExistsException("User is exists");
