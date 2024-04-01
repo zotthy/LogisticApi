@@ -91,4 +91,14 @@ public class JwtService {
         List<SimpleGrantedAuthority> grantedAuthorities = authorities.stream().map(SimpleGrantedAuthority::new).toList();
         return new UsernamePasswordAuthenticationToken(subject, null, grantedAuthorities);
     }
+
+    public String getEmailFromToken(String token) {
+        try {
+            SignedJWT signedJWT = SignedJWT.parse(token);
+            JWTClaimsSet jwtClaimsSet = signedJWT.getJWTClaimsSet();
+            return jwtClaimsSet.getSubject();
+        } catch (ParseException e){
+            throw new JwtAuthenticationException("Failed to get email from token");
+        }
+    }
 }

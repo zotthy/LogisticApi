@@ -31,6 +31,15 @@ public class User {
 			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
 	)
 	private Set<UserRole> roles = new HashSet<>();
+
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "cargo_owners",
+			joinColumns = @JoinColumn(name = "user_id",referencedColumnName = "id"),
+			inverseJoinColumns = @JoinColumn(name = "cargo_id",referencedColumnName = "id")
+	)
+	private Set<Cargo> cargoList = new HashSet<>();
+
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "address_id")
 	private Address address;
@@ -70,5 +79,21 @@ public class User {
 	}
 	public void setRoles(Set<UserRole> roles) {
 		this.roles = roles;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public Set<Cargo> getCargoList() {
+		return cargoList;
+	}
+
+	public void setCargoList(Set<Cargo> cargoList) {
+		this.cargoList = cargoList;
 	}
 }

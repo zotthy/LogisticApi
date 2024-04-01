@@ -39,8 +39,8 @@ class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(mvc.pattern("/register")).permitAll()
                 .requestMatchers(mvc.pattern("/login")).permitAll()
-                .requestMatchers(mvc.pattern("/hi")).hasRole("ADMIN")
-                .requestMatchers(mvc.pattern("/hiuser")).hasRole("ADMIN")
+                .requestMatchers(mvc.pattern("/hi")).permitAll()
+                .requestMatchers(mvc.pattern("/add")).hasRole("USER")
                 .anyRequest().permitAll()
         );
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
