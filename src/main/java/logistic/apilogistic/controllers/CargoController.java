@@ -1,11 +1,8 @@
 package logistic.apilogistic.controllers;
 
-import logistic.apilogistic.Dtos.CargoAddressDto;
 import logistic.apilogistic.Dtos.CargoDto;
-import logistic.apilogistic.entity.Cargo;
 import logistic.apilogistic.service.CargoService;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -32,13 +29,26 @@ public class CargoController {
         return cargoDto.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
+    @GetMapping("/my/cargo")
+    public Page<CargoDto> getMyCargos(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestHeader("Authorization") String token) {
+        return cargoService.getCargosByUser(token,page,size);
+    }
     @PostMapping("/cargo/add")
-    ResponseEntity<?> cargoAdd(@RequestHeader("Authorization") String token, @RequestBody CargoDto cargoDto){
+    ResponseEntity<?> cargoAdd(@RequestHeader("Authorization") String token,
+                               @RequestBody CargoDto cargoDto){
         CargoDto saved = cargoService.add(token,cargoDto);
         URI savedCompanyUri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(saved.getId())
                 .toUri();
         return ResponseEntity.created(savedCompanyUri).body(saved);
+    }
+    @PostMapping("/cargo/{cargoId}/addHandler")
+    public ResponseEntity<?> addHandlerToCargo(@RequestHeader("Authorization") String token,
+                                               @PathVariable Long cargoId){
+        cargoService.assignCargoHandler(token, cargoId);
+        return ResponseEntity.ok("Cargo handler added successfully");
     }
 }
