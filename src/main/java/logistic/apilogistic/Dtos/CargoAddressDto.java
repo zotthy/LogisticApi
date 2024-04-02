@@ -12,6 +12,7 @@ public class CargoAddressDto implements Serializable {
     private Long id;
     private String street;
     private String city;
+    private String province;
     private String zip_code;
 
     public CargoAddressDto(Long id, String street, String city, String zip_code) {
@@ -23,6 +24,14 @@ public class CargoAddressDto implements Serializable {
 
     public CargoAddressDto() {
 
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public void setId(Long id) {

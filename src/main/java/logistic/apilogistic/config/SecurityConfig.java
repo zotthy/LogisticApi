@@ -41,6 +41,7 @@ class SecurityConfig {
                 .requestMatchers(mvc.pattern("/cargo/{id}")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/add")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/orders/cargo/")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/{cargoId}/addHandler")).hasRole("USER")
                 .anyRequest().permitAll()
         );

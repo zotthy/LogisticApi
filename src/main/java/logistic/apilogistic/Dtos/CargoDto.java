@@ -1,6 +1,7 @@
 package logistic.apilogistic.Dtos;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * DTO for {@link logistic.apilogistic.entity.Cargo}
@@ -11,6 +12,7 @@ public class CargoDto implements Serializable {
     private String typeCargo;
     private String status;
     private String owner;
+    private LocalDateTime localDateTime;
     private CargoAddressDto loadAddress;
     private CargoAddressDto unloadAddress;
 
@@ -84,6 +86,14 @@ public class CargoDto implements Serializable {
         return unloadAddress;
     }
 
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
+    }
+
+    public void setLocalDateTime(LocalDateTime localDateTime) {
+        this.localDateTime = localDateTime;
+    }
+
     @Override
     public String toString() {
         return "CargoDto{" +
@@ -95,4 +105,5 @@ public class CargoDto implements Serializable {
                 ", unloadAddress=" + unloadAddress +
                 '}';
     }
+
 }

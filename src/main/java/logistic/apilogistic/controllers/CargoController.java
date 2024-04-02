@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -28,12 +29,6 @@ public class CargoController {
         return cargoDto.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @GetMapping("/my/cargo")
-    public Page<CargoDto> getMyCargos(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int size,
-                                    @RequestHeader("Authorization") String token) {
-        return cargoService.getCargosByUser(token,page,size);
-    }
     @PostMapping("/cargo/add")
     ResponseEntity<?> cargoAdd(@RequestHeader("Authorization") String token,
                                @RequestBody CargoDto cargoDto){
@@ -44,6 +39,18 @@ public class CargoController {
                 .toUri();
         return ResponseEntity.created(savedCompanyUri).body(saved);
     }
+    @GetMapping("/cargos/loadAddress/{province}")
+    public List<CargoDto> getCargosByLoadAddressProvince(@PathVariable String province) {
+        return cargoService.getCargosByLoadAddressProvince(province);
+    }
+
+    @GetMapping("/my/cargo")
+    public Page<CargoDto> getMyCargos(@RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "10") int size,
+                                    @RequestHeader("Authorization") String token) {
+        return cargoService.getCargosByUser(token,page,size);
+    }
+
     @PostMapping("/cargo/{cargoId}/addHandler")
     public ResponseEntity<?> addHandlerToCargo(@RequestHeader("Authorization") String token,
                                                @PathVariable Long cargoId){

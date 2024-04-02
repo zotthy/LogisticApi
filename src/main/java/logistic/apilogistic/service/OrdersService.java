@@ -6,7 +6,6 @@ import logistic.apilogistic.config.JwtService;
 import logistic.apilogistic.dtoMapper.CargoMapper;
 import logistic.apilogistic.entity.Cargo;
 import logistic.apilogistic.entity.Cargo_handler;
-import logistic.apilogistic.entity.Cargo_owners;
 import logistic.apilogistic.entity.User;
 import logistic.apilogistic.repository.CargoHandlerRepository;
 import logistic.apilogistic.repository.CargoRepository;

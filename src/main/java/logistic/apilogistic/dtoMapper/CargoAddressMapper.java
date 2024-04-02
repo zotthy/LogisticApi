@@ -16,6 +16,7 @@ public class CargoAddressMapper {
                 cargoAddressDto.getId(),
                 cargoAddressDto.getStreet(),
                 cargoAddressDto.getCity(),
+                cargoAddressDto.getProvince(),
                 cargoAddressDto.getZip_code()
         );
     }
@@ -23,6 +24,7 @@ public class CargoAddressMapper {
         CargoAddress cargoAddress = new CargoAddress();
         cargoAddress.setCity(cargoAddressDto.getCity());
         cargoAddress.setStreet(cargoAddressDto.getStreet());
+        cargoAddress.setProvince(cargoAddressDto.getProvince());
         cargoAddress.setZip_code(cargoAddressDto.getZip_code());
         return cargoAddress;
     }
@@ -32,6 +34,7 @@ public class CargoAddressMapper {
             cargoAddressDto.setId(cargoAddress.getId());
             cargoAddressDto.setCity(cargoAddress.getCity());
             cargoAddressDto.setStreet(cargoAddress.getStreet());
+            cargoAddressDto.setProvince(cargoAddress.getProvince());
             cargoAddressDto.setZip_code(cargoAddress.getZip_code());
         }
         return cargoAddressDto;

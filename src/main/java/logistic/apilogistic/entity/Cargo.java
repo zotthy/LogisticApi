@@ -1,6 +1,10 @@
 package logistic.apilogistic.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+
+
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -14,6 +18,8 @@ public class Cargo {
     private String status;
     private String owner;
 
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private LocalDateTime dateTime;
     @ManyToOne
     @JoinColumn(name = "load_address_id", nullable = false)
     private CargoAddress loadAddress;
@@ -86,6 +92,14 @@ public class Cargo {
 
     public void setUnloadAddress(CargoAddress unloadAddress) {
         this.unloadAddress = unloadAddress;
+    }
+
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     @Override
