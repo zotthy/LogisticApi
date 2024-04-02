@@ -9,13 +9,22 @@ public class CargoAddress {
     private Long id;
     private String street;
     private String city;
+    private String province;
     private String zip_code;
 
-    public CargoAddress(Long id, String street, String city, String zipCode) {
+    public CargoAddress(Long id, String street, String city, String zipCode, String zip_code) {
     }
 
     public CargoAddress() {
 
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
     }
 
     public Long getId() {

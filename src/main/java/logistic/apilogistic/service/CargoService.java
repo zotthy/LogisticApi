@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -93,6 +94,7 @@ public class CargoService {
 
         cargoHandlerRepository.save(cargoHandler);
     }
+
     @Transactional
     public CargoDto add(String token, CargoDto cargoDto) {
 
@@ -107,6 +109,7 @@ public class CargoService {
         cargoAddressRepository.save(loadAdress);
         cargoAddressRepository.save(unloadadress);
 
+        cargoDto.setLocalDateTime(LocalDateTime.now());
         Cargo cargo = CargoMapper.toEntity(cargoDto);
         cargo.setLoadAddress(loadAdress);
         cargo.setUnloadAddress(unloadadress);
@@ -119,7 +122,11 @@ public class CargoService {
         owners.setUser(userRepository.findByEmail(email)
                 .orElseThrow(() -> new EntityNotFoundException("User with ID not found.")));
         cargoOwnersRepository.save(owners);
+
         return cargoDto;
+    }
+    public List<CargoDto> getCargosByLoadAddressProvince(String province) {
+        return cargoRepository.findByLoadAddressProvince(province);
     }
 
 }

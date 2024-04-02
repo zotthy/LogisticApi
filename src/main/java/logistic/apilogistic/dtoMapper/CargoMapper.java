@@ -15,6 +15,7 @@ public class CargoMapper {
         cargo.setTypeCargo(cargoDto.getTypeCargo());
         cargo.setStatus(cargoDto.getStatus());
         cargo.setOwner(cargo.getOwner());
+        cargo.setDateTime(cargoDto.getLocalDateTime());
         CargoAddress loadAddress = CargoAddressMapper.toEntity(cargoDto.getLoadAddress());
         CargoAddress unloadAddress = CargoAddressMapper.toEntity(cargoDto.getUnloadAddress());
         cargo.setLoadAddress(loadAddress);
@@ -29,6 +30,7 @@ public class CargoMapper {
         cargoDto.setPrice(cargo.getPrice());
         cargoDto.setTypeCargo(cargo.getTypeCargo());
         cargoDto.setStatus(cargo.getStatus());
+        cargoDto.setLocalDateTime(cargo.getDateTime());
         cargoDto.setOwner(cargo.getOwner());
         CargoAddressDto loadAddressDto = CargoAddressMapper.mapToDto(cargo.getLoadAddress());
         CargoAddressDto unloadAddressDto = CargoAddressMapper.mapToDto(cargo.getUnloadAddress());

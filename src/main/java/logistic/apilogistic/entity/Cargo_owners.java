@@ -2,6 +2,9 @@ package logistic.apilogistic.entity;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Entity
 public class Cargo_owners {
     @Id
@@ -38,4 +41,5 @@ public class Cargo_owners {
     public void setUser(User user) {
         this.user = user;
     }
+
 }
