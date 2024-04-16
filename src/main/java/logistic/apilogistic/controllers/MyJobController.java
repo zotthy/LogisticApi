@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/orders")
+@CrossOrigin
 public class MyJobController {
     private final OrdersService ordersService;
 

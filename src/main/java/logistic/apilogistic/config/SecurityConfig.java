@@ -11,7 +11,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
+
+import java.util.Arrays;
 
 @Configuration
 class SecurityConfig {
@@ -36,13 +42,14 @@ class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(mvc.pattern("/register")).permitAll()
                 .requestMatchers(mvc.pattern("/login")).permitAll()
-                .requestMatchers(mvc.pattern("/address")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/dis")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/{id}")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/add")).hasRole("USER")
-                .requestMatchers(mvc.pattern("/cargo")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/cargo")).permitAll()
                 .requestMatchers(mvc.pattern("/orders/cargo/")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/{cargoId}/addHandler")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/profile")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/profile/address")).hasRole("USER")
                 .anyRequest().permitAll()
         );
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

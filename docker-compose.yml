@@ -1,12 +1,4 @@
 services:
-  spring:
-    build: .
-    image: spring_app_image
-    container_name: spring_app
-    ports:
-      - "8080:8080"
-    depends_on:
-      - mysql
   mysql:
     container_name: bazadanych
     image: mysql:8.2.0

@@ -1,5 +1,8 @@
 package logistic.apilogistic.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import logistic.apilogistic.Dtos.TokenDTO;
 import logistic.apilogistic.authRequest.LoginRequest;
 import logistic.apilogistic.config.JwtService;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,14 +21,16 @@ public class LoginService {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private ObjectMapper objectMapper;
 
-    public LoginService(AuthenticationManager authenticationManager,JwtService jwtService) {
+    public LoginService(AuthenticationManager authenticationManager, JwtService jwtService, ObjectMapper objectMapper) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.objectMapper = objectMapper;
     }
 
     @Transactional
-    public String authenticateAndCreateToken(LoginRequest loginRequest) {
+    public String authenticateAndCreateToken(LoginRequest loginRequest) throws JsonProcessingException {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getUsername(),
@@ -36,7 +41,9 @@ public class LoginService {
                 .collect(Collectors.toList());
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        return jwtService.createSignedJWT(authentication.getName(),authorities);
+        String tokenResponse = jwtService.createSignedJWT(authentication.getName(),authorities);
+        TokenDTO tokenDTO = new TokenDTO(tokenResponse);
+        String tokenJson = objectMapper.writeValueAsString(tokenDTO);
+        return tokenJson;
     }
 }
