@@ -5,6 +5,7 @@ public class AddressDto {
     private String street;
     private String city;
     private String zip_code;
+    private int number;
     private AddressDto addressDto;
 
     public Long getId() {
@@ -45,5 +46,13 @@ public class AddressDto {
 
     public void setAddressDto(AddressDto addressDto) {
         this.addressDto = addressDto;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

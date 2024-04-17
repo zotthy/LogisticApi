@@ -42,8 +42,9 @@ public class LoginService {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String tokenResponse = jwtService.createSignedJWT(authentication.getName(),authorities);
-        TokenDTO tokenDTO = new TokenDTO(tokenResponse);
-        String tokenJson = objectMapper.writeValueAsString(tokenDTO);
-        return tokenJson;
+        //TokenDTO tokenDTO = new TokenDTO(tokenResponse);
+        //String tokenJson = objectMapper.writeValueAsString(tokenDTO);
+        //return tokenJson;
+        return tokenResponse;
     }
 }
