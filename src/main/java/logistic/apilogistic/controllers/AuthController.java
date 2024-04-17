@@ -1,8 +1,8 @@
 package logistic.apilogistic.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import logistic.apilogistic.authRequest.LoginRequest;
 import logistic.apilogistic.authRequest.RegisterRequest;
-import logistic.apilogistic.entity.Address;
 import logistic.apilogistic.exceptions.ExistsException;
 import logistic.apilogistic.service.LoginService;
 import logistic.apilogistic.service.UserCredentialsService;
@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@CrossOrigin
 public class AuthController {
     private final UserCredentialsService userCredentialsService;
     private final LoginService loginService;
@@ -23,7 +24,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws JsonProcessingException {
         String token = loginService.authenticateAndCreateToken(loginRequest);
         return new ResponseEntity<>(token, HttpStatus.OK);
     }
@@ -38,12 +39,5 @@ public class AuthController {
         } catch (Exception e) {
             return new ResponseEntity<>("error", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
-
-    @PostMapping("/address")
-    public ResponseEntity<?> createAddress(@RequestHeader("Authorization") String token,
-                                           @RequestBody Address addressDto) {
-        userCredentialsService.createAndAssignAddressToUser(token, addressDto);
-        return ResponseEntity.ok().body("Address created successfully.");
     }
 }

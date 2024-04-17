@@ -10,7 +10,7 @@ public class Address {
     private String street;
     private String city;
     private String zip_code;
-
+    private int number;
     public Long getId() {
         return id;
     }
@@ -41,5 +41,13 @@ public class Address {
 
     public void setZip_code(String zip_code) {
         this.zip_code = zip_code;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }
