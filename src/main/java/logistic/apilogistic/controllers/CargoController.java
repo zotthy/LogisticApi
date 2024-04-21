@@ -51,11 +51,4 @@ public class CargoController {
                                     @RequestHeader("Authorization") String token) {
         return cargoService.getCargosByUser(token,page,size);
     }
-
-    @PostMapping("/cargo/{cargoId}/addHandler")
-    public ResponseEntity<?> addHandlerToCargo(@RequestHeader("Authorization") String token,
-                                               @PathVariable Long cargoId){
-        cargoService.assignCargoHandler(token, cargoId);
-        return ResponseEntity.ok("Cargo handler added successfully");
-    }
 }

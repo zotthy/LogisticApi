@@ -16,6 +16,7 @@ public class CargoDto implements Serializable {
     private CargoAddressDto loadAddress;
     private CargoAddressDto unloadAddress;
 
+
     public CargoDto(Long id, Double price, String typeCargo, String status, String owner, CargoAddressDto loadAddress, CargoAddressDto unloadAddress) {
         this.id = id;
         this.price = price;
@@ -41,11 +42,6 @@ public class CargoDto implements Serializable {
     public void setTypeCargo(String typeCargo) {
         this.typeCargo = typeCargo;
     }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public void setOwner(String owner) {
         this.owner = owner;
     }
@@ -74,10 +70,6 @@ public class CargoDto implements Serializable {
         return typeCargo;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
     public CargoAddressDto getLoadAddress() {
         return loadAddress;
     }
@@ -92,6 +84,14 @@ public class CargoDto implements Serializable {
 
     public void setLocalDateTime(LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

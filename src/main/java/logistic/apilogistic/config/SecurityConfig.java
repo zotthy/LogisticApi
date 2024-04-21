@@ -47,9 +47,12 @@ class SecurityConfig {
                 .requestMatchers(mvc.pattern("/cargo/add")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo")).permitAll()
                 .requestMatchers(mvc.pattern("/orders/cargo/")).hasRole("USER")
-                .requestMatchers(mvc.pattern("/cargo/{cargoId}/addHandler")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/cargo/{cargoId}/take/{driverId}")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/profile")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/profile/address")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/driverNew")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/drivers")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/driver/{id}")).hasRole("USER")
                 .anyRequest().permitAll()
         );
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
