@@ -15,8 +15,8 @@ public class Cargo {
     private Long id;
     private Double price;
     private String typeCargo;
-    private String status;
     private String owner;
+    private String status;
 
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
@@ -70,14 +70,6 @@ public class Cargo {
         this.typeCargo = typeCargo;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public CargoAddress getLoadAddress() {
         return loadAddress;
     }
@@ -102,6 +94,14 @@ public class Cargo {
         this.dateTime = dateTime;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     @Override
     public String toString() {
         return "Cargo{" +
@@ -114,4 +114,5 @@ public class Cargo {
                 ", unloadAddress=" + unloadAddress +
                 '}';
     }
+
 }

@@ -32,12 +32,13 @@ public class CargoService {
     private final UserRepository userRepository;
     private final CargoOwnersRepository cargoOwnersRepository;
     private final CargoHandlerRepository cargoHandlerRepository;
+    private final DriverRepository driverRepository;
 
     @Autowired
     public CargoService(CargoAddressRepository cargoAddressRepository, CargoRepository cargoRepository,
                         CargoMapper cargoMapper, CargoAddressMapper cargoAddressMapper, JwtService jwtService,
                         UserRepository userRepository, CargoOwnersRepository cargoOwnersRepository,
-                        CargoHandlerRepository cargoHandlerRepository) {
+                        CargoHandlerRepository cargoHandlerRepository, DriverRepository driverRepository) {
         this.cargoAddressRepository = cargoAddressRepository;
         this.cargoRepository = cargoRepository;
         this.cargoMapper = cargoMapper;
@@ -46,6 +47,7 @@ public class CargoService {
         this.userRepository = userRepository;
         this.cargoOwnersRepository = cargoOwnersRepository;
         this.cargoHandlerRepository = cargoHandlerRepository;
+        this.driverRepository = driverRepository;
     }
 
     public Optional<CargoDto> getCargoById(Long id) {
@@ -80,21 +82,6 @@ public class CargoService {
 
         return new PageImpl<>(cargoDtos, pageable, cargos.size());
     }
-
-    public void assignCargoHandler(String token, Long cargoId) {
-        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
-                .orElseThrow(() -> new EntityNotFoundException("User with email was not found."));
-
-        Cargo cargo = cargoRepository.findById(cargoId)
-                .orElseThrow(() -> new EntityNotFoundException("Cargo with id was not found."));
-
-        Cargo_handler cargoHandler = new Cargo_handler();
-        cargoHandler.setUser(user);
-        cargoHandler.setCargo(cargo);
-
-        cargoHandlerRepository.save(cargoHandler);
-    }
-
     @Transactional
     public CargoDto add(String token, CargoDto cargoDto) {
 

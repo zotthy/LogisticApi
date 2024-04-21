@@ -6,9 +6,11 @@ import logistic.apilogistic.config.JwtService;
 import logistic.apilogistic.dtoMapper.CargoMapper;
 import logistic.apilogistic.entity.Cargo;
 import logistic.apilogistic.entity.Cargo_handler;
+import logistic.apilogistic.entity.Driver;
 import logistic.apilogistic.entity.User;
 import logistic.apilogistic.repository.CargoHandlerRepository;
 import logistic.apilogistic.repository.CargoRepository;
+import logistic.apilogistic.repository.DriverRepository;
 import logistic.apilogistic.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,16 +30,18 @@ public class OrdersService {
     private final CargoRepository cargoRepository;
     private final CargoHandlerRepository cargoHandlerRepository;
     private final CargoMapper cargoMapper;
+    private final DriverRepository driverRepository;
 
     @Autowired
     public OrdersService(JwtService jwtService, UserRepository userRepository,
                          CargoRepository cargoRepository, CargoHandlerRepository cargoHandlerRepository,
-                         CargoMapper cargoMapper) {
+                         CargoMapper cargoMapper, DriverRepository driverRepository) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.cargoRepository = cargoRepository;
         this.cargoHandlerRepository = cargoHandlerRepository;
         this.cargoMapper = cargoMapper;
+        this.driverRepository = driverRepository;
     }
 
     public Page<CargoDto> getCargosByUser(String token, int page, int size) {
@@ -57,5 +62,32 @@ public class OrdersService {
 
         return new PageImpl<>(cargoDtos, pageable, cargos.size());
     }
+    public List<Cargo_handler> getCargoHandlersForUser(String token) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
+                () -> new EntityNotFoundException("User not found."));
+        List<Cargo_handler> handlers = cargoHandlerRepository.findByUser(user);
+        handlers.forEach(h -> {
+            h.getCargo().getId();
+            h.getDriver().getId();
+        });
+        return handlers;
+    }
+    @Transactional
+    public void assignCargoHandler(String token, Long cargoId,Long driverId) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
+                .orElseThrow(() -> new EntityNotFoundException("User with email was not found."));
 
+        Cargo cargo = cargoRepository.findById(cargoId)
+                .orElseThrow(() -> new EntityNotFoundException("Cargo with id was not found."));
+
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new EntityNotFoundException("Driver with id was not found."));
+
+        Cargo_handler cargoHandler = new Cargo_handler();
+        cargoHandler.setUser(user);
+        cargoHandler.setCargo(cargo);
+        cargoHandler.setDriver(driver);
+
+        cargoHandlerRepository.save(cargoHandler);
+    }
 }

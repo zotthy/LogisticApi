@@ -13,3 +13,7 @@ INSERT INTO cargo_address (id, street, city, zip_code) VALUES (1, 'Broadway', 'N
 INSERT INTO cargo_address (id, street, city, zip_code) VALUES (2, 'Market Street', 'San Francisco', '00999');
 
 INSERT INTO cargo (id, price, status, load_address_id, unload_address_id) VALUES (1, 999.99 , 'Delivered', 1, 2);
+
+INSERT INTO driver(name, surname, number) VALUES ('John', 'Doe', 12345);
+INSERT INTO my_driver (user_id, driver_id) VALUES (1, 1);
+INSERT INTO cargo_handler (cargo_id, user_id, driver_id) VALUES (1, 1, 1);
