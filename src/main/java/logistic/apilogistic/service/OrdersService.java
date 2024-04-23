@@ -2,7 +2,7 @@ package logistic.apilogistic.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import logistic.apilogistic.Dtos.CargoDto;
-import logistic.apilogistic.config.JwtService;
+import logistic.apilogistic.security.JwtService;
 import logistic.apilogistic.dtoMapper.CargoMapper;
 import logistic.apilogistic.entity.Cargo;
 import logistic.apilogistic.entity.Cargo_handler;
@@ -20,7 +20,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -62,16 +65,6 @@ public class OrdersService {
 
         return new PageImpl<>(cargoDtos, pageable, cargos.size());
     }
-    public List<Cargo_handler> getCargoHandlersForUser(String token) {
-        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
-                () -> new EntityNotFoundException("User not found."));
-        List<Cargo_handler> handlers = cargoHandlerRepository.findByUser(user);
-        handlers.forEach(h -> {
-            h.getCargo().getId();
-            h.getDriver().getId();
-        });
-        return handlers;
-    }
     @Transactional
     public void assignCargoHandler(String token, Long cargoId,Long driverId) {
         User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
@@ -89,5 +82,18 @@ public class OrdersService {
         cargoHandler.setDriver(driver);
 
         cargoHandlerRepository.save(cargoHandler);
+    }
+    public Map<Driver, List<Cargo>> getDriversAndCargosForUser(String token) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
+                () -> new EntityNotFoundException("User not found."));
+        List<Cargo_handler> handlers = cargoHandlerRepository.findByUser(user);
+
+        Map<Driver, List<Cargo>> result = new HashMap<>();
+
+        for (Cargo_handler handler : handlers) {
+            result.computeIfAbsent(handler.getDriver(), k -> new ArrayList<>()).add(handler.getCargo());
+        }
+
+        return result;
     }
 }

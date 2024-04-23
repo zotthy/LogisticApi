@@ -1,4 +1,4 @@
-package logistic.apilogistic.config;
+package logistic.apilogistic.security;
 
 import org.springframework.security.core.AuthenticationException;
 

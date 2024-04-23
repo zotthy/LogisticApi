@@ -1,6 +1,7 @@
 package logistic.apilogistic.controllers;
 
 import logistic.apilogistic.Dtos.DriverDto;
+import logistic.apilogistic.entity.Cargo;
 import logistic.apilogistic.entity.Driver;
 import logistic.apilogistic.service.DriverService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -42,5 +44,10 @@ public class DriversController {
         Driver driver = driverService.getDriverById(id,token);
         return ResponseEntity.ok(driver);
     }
-
+    @GetMapping("/driver/{driverId}/cargos")
+    public List<Cargo> getCargosForDriver(
+            @RequestHeader (name="Authorization") String token,
+            @PathVariable Long driverId) {
+        return driverService.getCargosForSpecificDriver(token, driverId);
+    }
 }

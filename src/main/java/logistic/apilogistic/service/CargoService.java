@@ -3,7 +3,7 @@ package logistic.apilogistic.service;
 import jakarta.persistence.EntityNotFoundException;
 import logistic.apilogistic.Dtos.CargoAddressDto;
 import logistic.apilogistic.Dtos.CargoDto;
-import logistic.apilogistic.config.JwtService;
+import logistic.apilogistic.security.JwtService;
 import logistic.apilogistic.dtoMapper.CargoAddressMapper;
 import logistic.apilogistic.dtoMapper.CargoMapper;
 import logistic.apilogistic.entity.*;

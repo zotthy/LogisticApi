@@ -1,4 +1,4 @@
-package logistic.apilogistic.config;
+package logistic.apilogistic.security;
 
 import logistic.apilogistic.service.UserCredentialsService;
 import logistic.apilogistic.Dtos.UserCredentialsDto;
