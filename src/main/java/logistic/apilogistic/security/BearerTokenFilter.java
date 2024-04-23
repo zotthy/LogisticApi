@@ -1,4 +1,4 @@
-package logistic.apilogistic.config;
+package logistic.apilogistic.security;
 
 import com.nimbusds.jwt.SignedJWT;
 
@@ -19,7 +19,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationFa
 import java.io.IOException;
 import java.text.ParseException;
 
-class BearerTokenFilter extends HttpFilter {
+public class BearerTokenFilter extends HttpFilter {
     private final Logger logger = LoggerFactory.getLogger(BearerTokenFilter.class);
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String BEARER_PREFIX = "Bearer ";

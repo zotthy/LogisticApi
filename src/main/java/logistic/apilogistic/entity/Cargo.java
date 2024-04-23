@@ -15,6 +15,7 @@ public class Cargo {
     private Long id;
     private Double price;
     private String typeCargo;
+
     private String owner;
     private String status;
 
@@ -114,5 +115,4 @@ public class Cargo {
                 ", unloadAddress=" + unloadAddress +
                 '}';
     }
-
 }

@@ -2,7 +2,7 @@ package logistic.apilogistic.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import logistic.apilogistic.Dtos.UserProfileDto;
-import logistic.apilogistic.config.JwtService;
+import logistic.apilogistic.security.JwtService;
 import logistic.apilogistic.dtoMapper.UserProfileDtoMapper;
 import logistic.apilogistic.entity.Address;
 import logistic.apilogistic.entity.User;
@@ -49,6 +49,13 @@ public class ProfileService {
     public UserProfileDto getProfile(String token){
         String userEmail = jwtService.getEmailFromToken(token);
         User user = userRepository.getUserByEmail(userEmail);
+        if (user == null) {
+            throw new EntityNotFoundException("User not found");
+        }
+        return UserProfileDtoMapper.toDto(user);
+    }
+    public UserProfileDto checkProfile(String email){
+        User user = userRepository.getUserByEmail(email);
         if (user == null) {
             throw new EntityNotFoundException("User not found");
         }

@@ -1,11 +1,10 @@
 package logistic.apilogistic.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import logistic.apilogistic.Dtos.DriverDto;
-import logistic.apilogistic.config.JwtService;
+import logistic.apilogistic.security.JwtService;
 import logistic.apilogistic.dtoMapper.DriverDtoMapper;
-import logistic.apilogistic.entity.Driver;
-import logistic.apilogistic.entity.MyDrivers;
-import logistic.apilogistic.entity.User;
+import logistic.apilogistic.entity.*;
 import logistic.apilogistic.exceptions.ExistsException;
 import logistic.apilogistic.exceptions.ResourceNotFoundException;
 import logistic.apilogistic.exceptions.UnauthorizedException;
@@ -19,7 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -79,5 +80,13 @@ public class DriverService {
 
         return driverRepository.findById(id)
                 .orElseThrow(() -> new ExistsException("Driver with id " + id + " not found"));
+    }
+    public List<Cargo> getCargosForSpecificDriver(String token, Long driverId) {
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
+                () -> new EntityNotFoundException("User not found."));
+        Driver driver = driverRepository.findById(driverId).orElseThrow(
+                () -> new EntityNotFoundException("Driver not found."));
+        List<Cargo_handler> handlers = cargoHandlerRepository.findByDriver(driver);
+        return handlers.stream().map(Cargo_handler::getCargo).collect(Collectors.toList());
     }
 }
