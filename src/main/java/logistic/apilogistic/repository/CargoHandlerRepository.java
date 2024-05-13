@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CargoHandlerRepository extends JpaRepository<Cargo_handler,Long> {
     List<Cargo_handler> findByUser(User user);
     List<Cargo_handler> findByDriver(Driver driver);
+    Optional<Cargo_handler> findByCargoId(Long cargoId);
 }
