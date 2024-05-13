@@ -3,6 +3,7 @@ package logistic.apilogistic.service;
 import jakarta.persistence.EntityNotFoundException;
 import logistic.apilogistic.Dtos.CargoAddressDto;
 import logistic.apilogistic.Dtos.CargoDto;
+import logistic.apilogistic.Dtos.CargoWithHandlerDto;
 import logistic.apilogistic.security.JwtService;
 import logistic.apilogistic.dtoMapper.CargoAddressMapper;
 import logistic.apilogistic.dtoMapper.CargoMapper;
@@ -63,8 +64,7 @@ public class CargoService {
                 .collect(Collectors.toList());
         return new PageImpl<>(cargoDtoList, pageable, cargoPage.getTotalElements());
     }
-
-    public Page<CargoDto> getCargosByUser(String token, int page, int size) {
+    public Page<CargoWithHandlerDto> getCargosByUser(String token, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         String userEmail = jwtService.getEmailFromToken(token);
 
@@ -76,11 +76,28 @@ public class CargoService {
 
         int start = (int) pageable.getOffset();
         int end = Math.min((start + pageable.getPageSize()), cargos.size());
-        List<CargoDto> cargoDtos = cargos.subList(start, end).stream()
-                .map(cargoMapper::toDto)
+
+        List<CargoWithHandlerDto> cargoWithHandlerDtos = cargos.subList(start, end).stream()
+                .map(cargo -> {
+
+                    // Get the unload and load addresses for the cargo.
+                    CargoAddress unloadAddress = cargo.getUnloadAddress();
+                    CargoAddress loadAddress = cargo.getLoadAddress();
+
+                    Cargo_handler cargoHandler = cargoHandlerRepository.findByCargoId(cargo.getId()).orElse(null);
+                    User handler = null;
+                    Driver driver = null;
+                    if (cargoHandler != null){
+                        handler = cargoHandler.getUser();
+                        driver = cargoHandler.getDriver();
+                    }
+
+                    // Include the addresses in the DTO.
+                    return new CargoWithHandlerDto(cargo, handler, driver, unloadAddress, loadAddress);
+                })
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(cargoDtos, pageable, cargos.size());
+        return new PageImpl<>(cargoWithHandlerDtos, pageable, cargos.size());
     }
     @Transactional
     public CargoDto add(String token, CargoDto cargoDto) {
@@ -112,8 +129,57 @@ public class CargoService {
 
         return cargoDto;
     }
+    public Page<CargoWithHandlerDto> getAllCargosWithHandlerNull(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+
+        List<Cargo> cargos = cargoRepository.findAll();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), cargos.size());
+
+        List<CargoWithHandlerDto> cargoWithHandlerDtos = cargos.subList(start, end).stream()
+                .filter(cargo -> cargoHandlerRepository.findByCargoId(cargo.getId()).isEmpty())
+                .map(cargo -> {
+                    // Get the unload and load addresses for the cargo.
+                    CargoAddress unloadAddress = cargo.getUnloadAddress();
+                    CargoAddress loadAddress = cargo.getLoadAddress();
+
+                    // No handler and driver since we know cargoHandler is null
+                    // for this cargo (due to the filter)
+                    return new CargoWithHandlerDto(cargo, null, null, unloadAddress, loadAddress);
+                })
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(cargoWithHandlerDtos, pageable, cargos.size());
+    }
     public List<CargoDto> getCargosByLoadAddressProvince(String province) {
         return cargoRepository.findByLoadAddressProvince(province);
     }
 
+    public CargoWithHandlerDto getCargoByUserAndId(String token, Long cargoId){
+        String userEmail = jwtService.getEmailFromToken(token);
+
+        User user = userRepository.findByEmail(userEmail)
+                .orElseThrow(() -> new EntityNotFoundException("User with e-mail " + userEmail + " was not found."));
+
+        Cargo_owners cargoOwner = cargoOwnersRepository.findByUserAndCargoId(user, cargoId)
+                .orElseThrow(() -> new EntityNotFoundException("Cargo with id " + cargoId + " was not found for user."));
+
+        Cargo cargo = cargoOwner.getCargo();
+
+        // Get the unload and load addresses for the cargo.
+        CargoAddress unloadAddress = cargo.getUnloadAddress();
+        CargoAddress loadAddress = cargo.getLoadAddress();
+
+        Cargo_handler cargoHandler = cargoHandlerRepository.findByCargoId(cargo.getId()).orElse(null);
+        User handler = null;
+        Driver driver = null;
+        if (cargoHandler != null){
+            handler = cargoHandler.getUser();
+            driver = cargoHandler.getDriver();
+        }
+
+        // Include the addresses in the DTO.
+        return new CargoWithHandlerDto(cargo, handler, driver, unloadAddress, loadAddress);
+    }
 }

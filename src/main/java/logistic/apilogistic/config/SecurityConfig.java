@@ -39,17 +39,25 @@ class SecurityConfig {
         http.authorizeHttpRequests(requests -> requests
                 .requestMatchers(mvc.pattern("/register")).permitAll()
                 .requestMatchers(mvc.pattern("/login")).permitAll()
+
                 .requestMatchers(mvc.pattern("/cargo/dis")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/{id}")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/add")).hasRole("USER")
+
                 .requestMatchers(mvc.pattern("/cargo")).permitAll()
                 .requestMatchers(mvc.pattern("/orders/cargo/")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/cargo/{cargoId}/take/{driverId}")).hasRole("USER")
+
                 .requestMatchers(mvc.pattern("/profile")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/profile/address")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/checkProfile/{email}")).hasRole("USER")
+
+
                 .requestMatchers(mvc.pattern("/driverNew")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/drivers")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/driver/{id}")).hasRole("USER")
+
+                .requestMatchers(mvc.pattern("/cargos")).permitAll()
                 .anyRequest().permitAll()
         );
         http.sessionManagement(sessionConfig -> sessionConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS));

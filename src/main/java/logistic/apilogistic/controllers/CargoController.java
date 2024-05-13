@@ -1,6 +1,7 @@
 package logistic.apilogistic.controllers;
 
 import logistic.apilogistic.Dtos.CargoDto;
+import logistic.apilogistic.Dtos.CargoWithHandlerDto;
 import logistic.apilogistic.service.CargoService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -46,9 +47,19 @@ public class CargoController {
     }
 
     @GetMapping("/my/cargo")
-    public Page<CargoDto> getMyCargos(@RequestParam(defaultValue = "0") int page,
-                                    @RequestParam(defaultValue = "10") int size,
-                                    @RequestHeader("Authorization") String token) {
+    public Page<CargoWithHandlerDto> getMyCargos(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size,
+                                                 @RequestHeader("Authorization") String token) {
         return cargoService.getCargosByUser(token,page,size);
+    }
+    @GetMapping("/cargos")
+    public Page<CargoWithHandlerDto> getcargo(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size,
+                                                 @RequestHeader("Authorization") String token) {
+        return cargoService.getAllCargosWithHandlerNull(page,size);
+    }
+    @GetMapping("/my/cargo/{id}")
+    public CargoWithHandlerDto getMyCargo(@PathVariable Long id, @RequestHeader("Authorization") String token){
+        return cargoService.getCargoByUserAndId(token, id);
     }
 }
