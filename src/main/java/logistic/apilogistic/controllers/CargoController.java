@@ -41,16 +41,26 @@ public class CargoController {
                 .toUri();
         return ResponseEntity.created(savedCompanyUri).body(saved);
     }
-    @GetMapping("/cargos/loadAddress/{province}")
-    public List<CargoDto> getCargosByLoadAddressProvince(@PathVariable String province) {
-        return cargoService.getCargosByLoadAddressProvince(province);
-    }
 
     @GetMapping("/my/cargo")
     public Page<CargoWithHandlerDto> getMyCargos(@RequestParam(defaultValue = "0") int page,
                                                  @RequestParam(defaultValue = "10") int size,
                                                  @RequestHeader("Authorization") String token) {
         return cargoService.getCargosByUser(token,page,size);
+    }
+    @GetMapping("/my/actual/cargo")
+    public Page<CargoWithHandlerDto> getMyCargosActual(@RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size,
+                                                 @RequestHeader("Authorization") String token) {
+        String status = "Realization";
+        return cargoService.getCargosByUserAndStatus(token,page,size,status);
+    }
+    @GetMapping("/my/history/cargo")
+    public Page<CargoWithHandlerDto> getMyCargosHistory(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "10") int size,
+                                                       @RequestHeader("Authorization") String token) {
+        String status = "Complete";
+        return cargoService.getCargosByUserAndStatus(token,page,size,status);
     }
     @GetMapping("/cargos")
     public Page<CargoWithHandlerDto> getcargo(@RequestParam(defaultValue = "0") int page,

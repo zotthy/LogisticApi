@@ -1,5 +1,6 @@
 package logistic.apilogistic.service;
 
+import jakarta.mail.MessagingException;
 import jakarta.persistence.EntityNotFoundException;
 import logistic.apilogistic.Dtos.CargoDto;
 import logistic.apilogistic.security.JwtService;
@@ -34,17 +35,19 @@ public class OrdersService {
     private final CargoHandlerRepository cargoHandlerRepository;
     private final CargoMapper cargoMapper;
     private final DriverRepository driverRepository;
+    private final MailService mailService;
 
     @Autowired
     public OrdersService(JwtService jwtService, UserRepository userRepository,
                          CargoRepository cargoRepository, CargoHandlerRepository cargoHandlerRepository,
-                         CargoMapper cargoMapper, DriverRepository driverRepository) {
+                         CargoMapper cargoMapper, DriverRepository driverRepository, MailService mailService) {
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.cargoRepository = cargoRepository;
         this.cargoHandlerRepository = cargoHandlerRepository;
         this.cargoMapper = cargoMapper;
         this.driverRepository = driverRepository;
+        this.mailService = mailService;
     }
 
     public Page<CargoDto> getCargosByUser(String token, int page, int size) {
@@ -66,7 +69,7 @@ public class OrdersService {
         return new PageImpl<>(cargoDtos, pageable, cargos.size());
     }
     @Transactional
-    public void assignCargoHandler(String token, Long cargoId,Long driverId) {
+    public void assignCargoHandler(String token, Long cargoId,Long driverId) throws MessagingException {
         User user = userRepository.findByEmail(jwtService.getEmailFromToken(token))
                 .orElseThrow(() -> new EntityNotFoundException("User with email was not found."));
 
@@ -76,6 +79,18 @@ public class OrdersService {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new EntityNotFoundException("Driver with id was not found."));
 
+        System.out.println(driver.getEmail());
+        System.out.println(cargoMapper.toDto(cargo));
+        String subject = "Masz nowe zlecenie!";
+        String text = String.format("Cześć" +
+                        "Otrzymałeś nowe zlecenie transportowe! " +
+                        "Poniżej znajdują się szczegóły zlecenia: " +
+                        cargo.toString(),
+                        "Prosimy o jak najszybsze udanie się do miejsca załadunku i realizację zlecenia zgodnie z powyższymi informacjami. " +
+                        "Jeśli masz jakiekolwiek pytania, skontaktuj się z nami bezpośrednio." +
+                        "Dziękujemy za Twoją pracę i zaangażowanie!");
+
+        mailService.sendMail(driver.getEmail(), subject, text,true);
         Cargo_handler cargoHandler = new Cargo_handler();
         cargoHandler.setUser(user);
         cargoHandler.setCargo(cargo);

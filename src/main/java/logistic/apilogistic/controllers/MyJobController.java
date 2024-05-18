@@ -1,10 +1,9 @@
 package logistic.apilogistic.controllers;
 
+import jakarta.mail.MessagingException;
 import logistic.apilogistic.Dtos.CargoDto;
 import logistic.apilogistic.entity.Cargo;
-import logistic.apilogistic.entity.Cargo_handler;
 import logistic.apilogistic.entity.Driver;
-import logistic.apilogistic.service.CargoService;
 import logistic.apilogistic.service.OrdersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,11 +33,10 @@ public class MyJobController {
     @PostMapping("/cargo/{cargoId}/take/{driverId}")
     public ResponseEntity<?> addHandlerToCargo(@RequestHeader("Authorization") String token,
                                                @PathVariable Long cargoId,
-                                               @PathVariable Long driverId){
+                                               @PathVariable Long driverId) throws MessagingException {
         ordersService.assignCargoHandler(token, cargoId,driverId);
         return ResponseEntity.ok("Cargo handler added successfully");
     }
-    //////////////////
     @GetMapping("/user/driversAndCargos")
     public Map<Driver, List<Cargo>> getDriversAndCargosForUser(@RequestHeader (name="Authorization") String token) {
         return ordersService.getDriversAndCargosForUser(token);
