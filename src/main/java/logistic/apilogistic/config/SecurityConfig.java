@@ -56,6 +56,10 @@ class SecurityConfig {
                 .requestMatchers(mvc.pattern("/driverNew")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/drivers")).hasRole("USER")
                 .requestMatchers(mvc.pattern("/driver/{id}")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/drivers/avalible")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/driver/cargos/{driverId}")).hasRole("USER")
+                .requestMatchers(mvc.pattern("/driver/actual/{driverId}")).hasRole("USER")
+                .requestMatchers(mvc.pattern("driver/complete/{cargoId}")).permitAll()
 
                 .requestMatchers(mvc.pattern("/cargos")).permitAll()
                 .anyRequest().permitAll()

@@ -15,11 +15,10 @@ public class Cargo {
     private Long id;
     private Double price;
     private String typeCargo;
-
     private String owner;
     private String status;
 
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern="yyyy-MM-dd")
     private LocalDateTime dateTime;
     @ManyToOne
     @JoinColumn(name = "load_address_id", nullable = false)

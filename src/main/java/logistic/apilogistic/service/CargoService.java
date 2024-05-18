@@ -116,6 +116,7 @@ public class CargoService {
         cargoDto.setLocalDateTime(LocalDateTime.now());
         Cargo cargo = CargoMapper.toEntity(cargoDto);
         cargo.setLoadAddress(loadAdress);
+        cargo.setStatus("Realization");
         cargo.setUnloadAddress(unloadadress);
         cargo.setOwner(email);
 
