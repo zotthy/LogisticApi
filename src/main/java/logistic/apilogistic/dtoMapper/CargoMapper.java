@@ -5,7 +5,6 @@ import logistic.apilogistic.Dtos.CargoDto;
 import logistic.apilogistic.entity.Cargo;
 import logistic.apilogistic.entity.CargoAddress;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 @Component
 public class CargoMapper {
