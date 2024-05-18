@@ -14,5 +14,16 @@ spring:
   sql:
     init:
       data-locations: classpath:/import.sql
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: se05110800@gmail.com
+    password: zxip swkl tzzn fkpw
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 jws:
   sharedKey: 90b571f5-72b4-4e20-bc61-4929a871c4d0

@@ -1,5 +1,6 @@
 package logistic.apilogistic.entity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
 
 @Entity
 @Table(name = "driver")
@@ -9,6 +10,8 @@ public class Driver {
     private Long id;
     private String name;
     private String surname;
+    @Email
+    private String email;
     private int number;
 
     public Long getId() {
@@ -43,12 +46,21 @@ public class Driver {
         this.number = number;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "Driver{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
                 ", number=" + number +
                 '}';
     }

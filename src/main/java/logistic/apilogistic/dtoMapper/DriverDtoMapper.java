@@ -10,8 +10,8 @@ public class DriverDtoMapper {
         Driver driver = new Driver();
         driver.setName(driverDto.getName());
         driver.setSurname(driverDto.getSurname());
+        driver.setEmail(driverDto.getEmail());
         driver.setNumber(driverDto.getNumber());
-
         return driver;
     }
     public static DriverDto map(Driver driver){
@@ -19,6 +19,7 @@ public class DriverDtoMapper {
         driverDto.setId(driver.getId());
         driverDto.setName(driver.getName());
         driverDto.setSurname(driver.getSurname());
+        driverDto.setEmail(driver.getEmail());
         driverDto.setNumber(driver.getNumber());
         return driverDto;
     }
