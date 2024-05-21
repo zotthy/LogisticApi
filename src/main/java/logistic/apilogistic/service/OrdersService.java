@@ -79,8 +79,8 @@ public class OrdersService {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new EntityNotFoundException("Driver with id was not found."));
 
-        System.out.println(driver.getEmail());
-        System.out.println(cargoMapper.toDto(cargo));
+        //System.out.println(driver.getEmail());
+        //System.out.println(cargoMapper.toDto(cargo));
         String subject = "Masz nowe zlecenie!";
         String text = String.format("Cześć" +
                         "Otrzymałeś nowe zlecenie transportowe! " +

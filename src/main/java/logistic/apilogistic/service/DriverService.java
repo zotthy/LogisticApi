@@ -104,6 +104,18 @@ public class DriverService {
                 .filter(cargo -> cargo.getStatus().equals(status))
                 .collect(Collectors.toList());
     }
+    public List<Cargo> getCompleteDrivers(String token, Long driverId) {
+        String status = "Complete";
+        User user = userRepository.findByEmail(jwtService.getEmailFromToken(token)).orElseThrow(
+                () -> new EntityNotFoundException("User not found."));
+        Driver driver = driverRepository.findById(driverId).orElseThrow(
+                () -> new EntityNotFoundException("Driver not found."));
+        List<Cargo_handler> handlers = cargoHandlerRepository.findByDriver(driver);
+        return handlers.stream()
+                .map(Cargo_handler::getCargo)
+                .filter(cargo -> cargo.getStatus().equals(status))
+                .collect(Collectors.toList());
+    }
 
     public Page<DriverDto> getAvalibleDrivers(String token, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

@@ -64,6 +64,12 @@ public class DriversController {
             @PathVariable Long driverId) {
         return driverService.getReaizationDrivers(token, driverId);
     }
+    @GetMapping("/driver/history/{driverId}")
+    public List<Cargo> getHistoryCargos(
+            @RequestHeader (name="Authorization") String token,
+            @PathVariable Long driverId) {
+        return driverService.getCompleteDrivers(token, driverId);
+    }
     @GetMapping("/driver/complete/{cargoId}")
     public ResponseEntity<Cargo> updateStatus(@PathVariable("cargoId") Long cargoId) {
         Cargo updatedCargo = driverService.completeCargo(cargoId);
