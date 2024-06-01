@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 @Service
-public class UserCredentialsService {
+public class UserService {
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
@@ -25,8 +25,8 @@ public class UserCredentialsService {
 
 
     @Autowired
-    public UserCredentialsService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleRepozitory userRoleRepozitory,
-                                  UserRegisterDtoMapper userRegisterDtoMapper) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, UserRoleRepozitory userRoleRepozitory,
+                       UserRegisterDtoMapper userRegisterDtoMapper) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userRoleRepozitory = userRoleRepozitory;

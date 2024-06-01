@@ -1,15 +1,25 @@
 package logistic.apilogistic.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 public class CargoAddress {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Length(max = 100)
+    @NotNull
     private String street;
+    @Length(max = 100)
+    @NotNull
     private String city;
+    @Length(max = 100)
+    @NotNull
     private String province;
+    @Length(max = 6)
+    @NotNull
     private String zip_code;
 
     public CargoAddress(Long id, String street, String city, String zipCode, String zip_code) {

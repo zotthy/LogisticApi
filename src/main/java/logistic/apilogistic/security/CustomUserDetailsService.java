@@ -1,6 +1,6 @@
 package logistic.apilogistic.security;
 
-import logistic.apilogistic.service.UserCredentialsService;
+import logistic.apilogistic.service.UserService;
 import logistic.apilogistic.Dtos.UserCredentialsDto;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +11,9 @@ import org.springframework.stereotype.Service;
 
 @Service
 class CustomUserDetailsService implements UserDetailsService {
-    private final UserCredentialsService userService;
+    private final UserService userService;
 
-    public CustomUserDetailsService(UserCredentialsService userService) {
+    public CustomUserDetailsService(UserService userService) {
         this.userService = userService;
     }
 
