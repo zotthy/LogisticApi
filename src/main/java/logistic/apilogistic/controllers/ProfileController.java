@@ -26,8 +26,4 @@ public class ProfileController {
     public ResponseEntity<?> getProfileInfo(@RequestHeader("Authorization") String token){
         return ResponseEntity.ok().body(profileService.getProfile(token));
     }
-    @GetMapping("/checkProfile/{email}")
-    public ResponseEntity<?> checkProfile(@PathVariable String email){
-        return ResponseEntity.ok().body(profileService.checkProfile(email));
-    }
 }

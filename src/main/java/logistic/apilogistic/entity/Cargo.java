@@ -2,6 +2,7 @@ package logistic.apilogistic.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
+import org.hibernate.validator.constraints.Length;
 
 
 import java.time.LocalDateTime;
@@ -14,8 +15,11 @@ public class Cargo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double price;
+    @Length(max = 100)
     private String typeCargo;
+    @Length(max = 100)
     private String owner;
+    @Length(max = 100)
     private String status;
 
     @JsonFormat(pattern="yyyy-MM-dd")

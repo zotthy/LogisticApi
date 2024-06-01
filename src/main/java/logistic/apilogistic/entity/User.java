@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.*;
 
@@ -15,10 +16,13 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotNull
+	@Length(max = 100)
 	private String firstName;
 	@NotNull
+	@Length(max = 100)
 	private String lastName;
 	@Email(message = "Invalid e-mail")
+	@Length(max = 100)
 	private String email;
 	@Size(min = 8)
 	@NotNull

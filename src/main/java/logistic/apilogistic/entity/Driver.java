@@ -1,6 +1,8 @@
 package logistic.apilogistic.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @Table(name = "driver")
@@ -8,10 +10,17 @@ public class Driver {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Length(max = 100)
+    @NotNull
     private String name;
+    @NotNull
+    @Length(max = 100)
     private String surname;
+    @Length(max = 100)
+    @NotNull
     @Email
     private String email;
+    @NotNull
     private int number;
 
     public Long getId() {

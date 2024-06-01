@@ -1,5 +1,7 @@
 package logistic.apilogistic.entity;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 public class Address {
@@ -7,8 +9,14 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Length(max = 100)
+    @NotNull
     private String street;
+    @Length(max = 100)
+    @NotNull
     private String city;
+    @Length(max = 6)
+    @NotNull
     private String zip_code;
     private int number;
     public Long getId() {

@@ -1,4 +1,5 @@
 services:
+
   mysql:
     container_name: bazadanych
     image: mysql:8.2.0
@@ -10,4 +11,16 @@ services:
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'password'
 
+  app:
+    container_name: SpringApp
+    build:
+      context: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    environment:
+      SPRING_DATASOURCE_URL: "jdbc:mysql://mysql:3306/db"
+      SPRING_DATASOURCE_USERNAME: 'user'
+      SPRING_DATASOURCE_PASSWORD: 'password'
 

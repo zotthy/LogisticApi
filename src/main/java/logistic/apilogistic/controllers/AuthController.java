@@ -5,7 +5,7 @@ import logistic.apilogistic.authRequest.LoginRequest;
 import logistic.apilogistic.authRequest.RegisterRequest;
 import logistic.apilogistic.exceptions.ExistsException;
 import logistic.apilogistic.service.LoginService;
-import logistic.apilogistic.service.UserCredentialsService;
+import logistic.apilogistic.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @CrossOrigin
 public class AuthController {
-    private final UserCredentialsService userCredentialsService;
+    private final UserService userService;
     private final LoginService loginService;
 
     @Autowired
-    public AuthController(UserCredentialsService userCredentialsService, LoginService loginService) {
-        this.userCredentialsService = userCredentialsService;
+    public AuthController(UserService userService, LoginService loginService) {
+        this.userService = userService;
         this.loginService = loginService;
     }
 
@@ -32,7 +32,7 @@ public class AuthController {
     @PostMapping("/register")
     ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            userCredentialsService.register(registerRequest);
+            userService.register(registerRequest);
             return new ResponseEntity<>("register is sucessfull", HttpStatus.OK);
         } catch (ExistsException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
